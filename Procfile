@@ -1,1 +1,1 @@
-web: voila --port=4000 --no-browser Question_Generation_and_Answering.ipynb
+web: gunicorn app.wsgi
