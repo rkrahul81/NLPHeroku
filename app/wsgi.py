@@ -215,4 +215,9 @@ def sendAnswers():
     with open('newfile.json', 'w') as f:
         json.dump(answer_res['answer'],f)
     return jsonify(answers_ret)
-app.run(port=4000)
+
+@app.route("/")
+def home_view():
+        return "<h1>Hello World!</h1>"
+        
+app.run()
