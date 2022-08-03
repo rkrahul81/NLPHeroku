@@ -87,7 +87,7 @@ SUPPORTED_TASKS = {
     "e2e-qg": {
         "impl": E2EQGPipeline,
         "default": {
-            "model": "valhalla/t5-base-e2e-qg",
+            "model": "valhalla/t5-small-e2e-qg",
         }
     }
 }
