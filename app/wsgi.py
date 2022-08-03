@@ -145,12 +145,12 @@ def pipeline(
     #Create an object of pipeline, e2e-qg is End2End Question Generation
 nlp = pipeline("e2e-qg")
 
-from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
-#Initialize answer_model_name with the name of the Question Answering Model
-answer_model_name = "bert-large-uncased-whole-word-masking-finetuned-squad"
-answer_tokenizer = AutoTokenizer.from_pretrained(answer_model_name)
-answer_model = AutoModelForQuestionAnswering.from_pretrained(answer_model_name)
-answer_pipeline = pipeline('question-answering', model=answer_model_name, tokenizer=answer_model_name)
+# from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
+# #Initialize answer_model_name with the name of the Question Answering Model
+# answer_model_name = "bert-large-uncased-whole-word-masking-finetuned-squad"
+# answer_tokenizer = AutoTokenizer.from_pretrained(answer_model_name)
+# answer_model = AutoModelForQuestionAnswering.from_pretrained(answer_model_name)
+# answer_pipeline = pipeline('question-answering', model=answer_model_name, tokenizer=answer_model_name)
 
 from flask import Flask, jsonify, request
 import sys
@@ -170,7 +170,7 @@ def sendQuestions():
     #done by replacing " initially with @@@ and then replacing it back after dict conversion
     data_jsons = data.split('}')
     
-    final_QAs = []
+    # final_QAs = []
     
     for data_json_text in data_jsons[:-1]:
         data_json_text+="}"
@@ -186,35 +186,35 @@ def sendQuestions():
         #generate questions for each context
         questions = nlp(context)
         
-        answers = []
-        for question in questions:
-            QA_input = {'question': question, 'context': context}
-            answer_res = answer_pipeline(QA_input)
-            answer = answer_res['answer']
-            answers.append({'question': question, 'answer':answer})
-            print(answers)        
-        #concatenate questions
-        final_QAs = final_QAs + answers
-        print(final_QAs)
-    return jsonify(final_QAs)
+        # answers = []
+        # for question in questions:
+        #     QA_input = {'question': question, 'context': context}
+        #     answer_res = answer_pipeline(QA_input)
+        #     answer = answer_res['answer']
+        #     answers.append({'question': question, 'answer':answer})
+        #     print(answers)        
+        # #concatenate questions
+        # final_QAs = final_QAs + answers
+        # print(final_QAs)
+    return jsonify(questions)
 
 #For returning the Predicted Answers when the context along with the questions is sent through the API
-@app.route('/sendAnswers', methods = ['POST'])
-def sendAnswers():
-    request_data = request.get_json()    
-    answers_ret = []
-    print(request_data, file=sys.stderr)
-    context = request_data[0]
-    questions = request_data[1]
-    for question in questions:
-        QA_input = {'question': question, 'context': context}
-        answer_res = answer_pipeline(QA_input)
-        ret_answer = answer_res['answer']
-        answers_ret.append({"question":question, "answer":ret_answer})
-    print(answer_res['answer'], file=sys.stderr)
-    with open('newfile.json', 'w') as f:
-        json.dump(answer_res['answer'],f)
-    return jsonify(answers_ret)
+# @app.route('/sendAnswers', methods = ['POST'])
+# def sendAnswers():
+#     request_data = request.get_json()    
+#     answers_ret = []
+#     print(request_data, file=sys.stderr)
+#     context = request_data[0]
+#     questions = request_data[1]
+#     for question in questions:
+#         QA_input = {'question': question, 'context': context}
+#         answer_res = answer_pipeline(QA_input)
+#         ret_answer = answer_res['answer']
+#         answers_ret.append({"question":question, "answer":ret_answer})
+#     print(answer_res['answer'], file=sys.stderr)
+#     with open('newfile.json', 'w') as f:
+#         json.dump(answer_res['answer'],f)
+#     return jsonify(answers_ret)
 
 @app.route("/")
 def home_view():
